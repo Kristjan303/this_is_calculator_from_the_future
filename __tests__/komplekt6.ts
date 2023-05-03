@@ -53,3 +53,10 @@ test("zero on clear", () => {
     calcobj?.pressButton("C");
     expect(calcobj?.getPanelContents()).toBe("0");
 });
+
+test('multiply 1', ()=>{
+    calcobj.pressButton('3');
+    calcobj.pressButton('X');
+    calcobj.pressButton('2');
+    expect(calcobj.getPanelContents()).toBe("2");
+});
