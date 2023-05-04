@@ -1,47 +1,48 @@
-class Calculator {
-    private panelContents: string = "0";
-    private lastOperation: string | null = null;
-
-    private calculate(): void {
-        const parts = this.panelContents.split("*");
-        const result = parts.reduce((prev: string, curr: string): string => {
-            return (parseFloat(prev) * parseFloat(curr)).toString();
-        });
-        this.panelContents = result;
-    }
-
-    private handleMultiply(): void {
-        if (/^\d/.test(this.panelContents)) {
-            if (this.lastOperation === "*") {
-                this.calculate();
+class Calculator{
+    protected panelContents:string="";
+    protected memoryContents:number=0;
+    protected markContents:string="";
+    protected markPressed:boolean=false;
+    protected marks:string[]=["+", "-", "X", "/"];
+    pressButton(b:string):void{
+        if(b=="C"){this.panelContents=""}
+        else if(this.marks.includes(b)){
+            this.memoryContents=parseFloat(this.panelContents);
+            this.markContents=b;
+            this.markPressed=true;
+        } else if(b=="="){
+            this.markPressed=true;
+            if(this.markContents.length==1){
+                if(this.markContents=="+"){
+                    this.panelContents=(this.memoryContents+parseFloat(this.panelContents)).toString();
+                }
+                if(this.markContents=="-"){
+                    this.panelContents=(this.memoryContents-parseFloat(this.panelContents)).toString();
+                }
+                if(this.markContents=="X"){
+                    this.panelContents=(this.memoryContents*parseFloat(this.panelContents)).toString();
+                }
+                if(this.markContents=="/"){
+                    this.panelContents=(this.memoryContents/parseFloat(this.panelContents)).toString();
+                }
             }
-            this.lastOperation = "*";
-            this.panelContents += "*";
-        } else {
-            const lastNumber = this.panelContents.match(/\d+$/)?.[0] || "0";
-            this.panelContents = lastNumber + "*";
+        }
+        else{
+            if(this.markPressed){
+                this.panelContents="";
+                this.markPressed=false;
+            }
+            this.panelContents+=b;
         }
     }
-
-    pressButton(b: string): void {
-        if (b === "C") {
-            this.panelContents = "0";
-            this.lastOperation = null;
-        } else if (b === "*") {
-            this.handleMultiply();
-        } else {
-            this.panelContents += b;
+    getPanelContents():string{
+        if(this.panelContents.length>0){
+            return this.panelContents;
         }
-    }
-
-    pressMultipleButtons(buttons: string[]): void {
-        this.panelContents += buttons.join("");
-    }
-
-    getPanelContents(): string {
-        const strippedContents = this.panelContents.replace(/^0+/, '');
-        return strippedContents !== '' ? strippedContents : '0';
+        return "0";
     }
 }
 
-export { Calculator };
+export{
+    Calculator
+}
